@@ -1,6 +1,8 @@
 import React from "react";
 import { useRef, useState } from "react";
 import styled from 'styled-components';
+import domtoimage from 'dom-to-image';
+import { saveAs } from 'file-saver';
 
 type State = {
     title: string,
@@ -116,6 +118,14 @@ const Layout = () => {
 
     }
 
+    const onDownloadBtn = () => {
+        domtoimage
+            .toBlob(ref.current[0])
+            .then((blob) => {
+            saveAs(blob, 'thumnail.png');
+    });
+};
+
     return (
         <>
             <h1>썸네일 메이커</h1>
@@ -146,6 +156,7 @@ const Layout = () => {
                 <span>썸네일 구성요소</span>
                 <button name='title'><input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)}/>색상선택</button>
             </div>
+            <button onClick={onDownloadBtn}>다운로드</button>
         </>
     )
 }
