@@ -1,12 +1,17 @@
 import React from "react";
 import { useRef, useState } from "react";
-import InputColor from 'react-input-color';
+import styled from 'styled-components';
 
 type State = {
     title: string,
     subTitle: string,
     description: string
 }
+
+const ThumnailWrap = styled.div`
+    width:768px;
+    height:402px;
+`
 
 const Layout = () => {
     const [inputs, setInputs] = useState<State>({
@@ -15,9 +20,10 @@ const Layout = () => {
         description: '설명',
     });
     const [color, setColor] = useState('#dece56');
-    const ref = useRef<null[] | HTMLDivElement[]>([]);
+    const [fontColor, setFontColor] = useState('#000');
+    const ref = useRef<any>([]);
 
-    
+    const arr = ['title', 'subTitle', 'description'];
     const ALLOW_FILE_EXTENSION = "jpg,jpge,png";
     const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
 
@@ -47,7 +53,7 @@ const Layout = () => {
     const gradientBackground = () => {
         const rgb = randomRGB();
 
-        ref.current.style.background = `linear-gradient(to bottom, ${color}, #${rgb})`
+        ref.current[0].style.background = `linear-gradient(to bottom, ${color}, #${rgb})`
     }
 
     const colorBackground = () => {
@@ -91,18 +97,33 @@ const Layout = () => {
 
     const changeLayout = (e:any) => {
         const name = e.target.name;
+        console.log(name)
+        
+         if(name === 'title') {
+           [1,2,3].forEach(i => 
+            ref.current[i].style.opacity = 1)
+         }
+         if(name === 'subTitle') {
+            ref.current[3].style.opacity = 0;
+            ref.current[1].style.opacity = 1;
+            ref.current[2].style.opacity = 1;
+         }
+         if(name === 'description') {
+            for(let i = 2; i < 4; i++) {
+                ref.current[i].style.opacity = 0
+            } 
+         } 
 
-        name === 'title' ? ref.current[1].style
     }
 
     return (
         <>
             <h1>썸네일 메이커</h1>
-            <div ref={(el) => {ref.current[0] = el}} style={{backgroundColor: color}}>
-                <div ref={(el) => {ref.current[1] = el}}>{inputs.title}</div>
-                <h3 ref={(el) => {ref.current[2] = el}}>{inputs.subTitle}</h3>
-                <p ref={(el) => {ref.current[3] = el}}>{inputs.description}</p>
-            </div>
+            <ThumnailWrap ref={(el) => {ref.current[0] = el}} style={{backgroundColor: color}}>
+                <h1 ref={(el) => {ref.current[1] = el}} style={{color: fontColor}}>{inputs.title}</h1>
+                <h3 ref={(el) => {ref.current[2] = el}} style={{color: fontColor}}>{inputs.subTitle}</h3>
+                <p ref={(el) => {ref.current[3] = el}} style={{color: fontColor}}>{inputs.description}</p>
+            </ThumnailWrap>
             <div>
                 <input name='title'  value={inputs.title} onChange={onChange}/>
                 <input name='subTitle' value={inputs.subTitle} onChange={onChange}/>
@@ -117,12 +138,13 @@ const Layout = () => {
             </div>
             <div>
                 <span>썸네일 구성요소</span>
-                <button name='title'>제목 + 부제목 + 설명</button>
-                <button name={inputs.subTitle} onClick={() => setInputs({
-                    ...inputs,
-                    title: ''
-                })}>제목 + 부제목</button>
-                <button onClick={colorBackground}>제목</button>
+                <button name='title' onClick={changeLayout}>제목 + 부제목 + 설명</button>
+                <button name='subTitle' onClick={changeLayout}>제목 + 부제목</button>
+                <button name='description' onClick={changeLayout}>제목</button>
+            </div>
+            <div>
+                <span>썸네일 구성요소</span>
+                <button name='title'><input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)}/>색상선택</button>
             </div>
         </>
     )
