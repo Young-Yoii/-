@@ -1,10 +1,12 @@
-import React from 'react';
-import './App.css';
+import GlobalStyle from './GlobalStyle';
 import Layout from './components/Layout';
 
 function App() {
   return (
-    <Layout />
+    <>
+      <GlobalStyle/>
+      <Layout />
+    </>
   );
 }
 

@@ -2,18 +2,60 @@ import React from "react";
 import { useRef, useState } from "react";
 import styled from 'styled-components';
 import domtoimage from 'dom-to-image';
-import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver'
+
+const Container = styled.div`
+  margin: 0 auto;
+`
+const ThumnailWrap = styled.div`
+  width: 768px;
+  height: 402px;
+  margin: 0 auto;
+`;
+const Input = styled.input`
+  margin-top: 20px;
+  border-radius: 20px;
+  border: 1px solid #000;
+  padding: 0px 10px;
+  box-sizing: border-box;
+  width: 200px;
+  height: 30px;
+  margin-right: 20px;
+`;
+const ColorPicker = styled.input`
+  background-color: transparent;
+  padding:0;
+  appearance: none;
+  width:35px;
+  height:35px;
+  border:none;
+  
+  &::-webkit-color-swatch {
+    border-radius: 5px;
+    border:none;
+  }
+`;
+const Button = styled.button`
+  background-color:#fff;
+  border-radius: 20px;
+  border: 1px solid #000;
+  width: 150px;
+  height: 30px;
+  margin-right: 20px;
+`
+const OptionWrapper = styled.div`
+  border-bottom: 2px solid #000;
+  padding-bottom: 20px;
+`;
+const OptionTitle = styled.span`
+  font-weight: 600;
+`;
 
 type State = {
   title: string,
   subTitle: string,
   description: string
-}
-
-const ThumnailWrap = styled.div`
-  width:768px;
-  height:402px;
-`
+};
 
 const Layout = () => {
   const [inputs, setInputs] = useState<State>({
@@ -92,8 +134,8 @@ const Layout = () => {
     return true;
   }
 
-  const changeLayout = (e:any) => {
-    const name = e.target.name;
+  const changeLayout = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const name = e.currentTarget.name;
         
     if(name === 'title') {
       [1,2,3].forEach(i => 
@@ -108,13 +150,13 @@ const Layout = () => {
         ref.current[2].style.opacity = 0;
         ref.current[3].style.opacity = 0;
     } 
-  }
+  };
 
    const shadowText = () => {
     [1,2,3].forEach(i => {
-      ref.current[i].style.textShadow = `2px 2px 2px gray`
-    })
-  }
+      ref.current[i].style.textShadow = '2px 2px 2px gray'
+    });
+  };
 
   const onDownloadBtn = () => {
     domtoimage
@@ -125,45 +167,70 @@ const Layout = () => {
 };
 
   return (
-    <>
+    <Container>
       <h1>썸네일 메이커</h1>
       <ThumnailWrap 
         ref={(el) => {ref.current[0] = el}} 
-        style={{backgroundColor: color}}
-      >
+        style={{backgroundColor: color}}>
         <h1 
           ref={(el) => {ref.current[1] = el}} 
-          style={{color: fontColor}}
-        >{inputs.title}
+          style={{color: fontColor}}>
+            {inputs.title}
         </h1>
-        <h3 ref={(el) => {ref.current[2] = el}} style={{color: fontColor, textShadow: '1px 1px 1px gray'}}>{inputs.subTitle}</h3>
-        <p ref={(el) => {ref.current[3] = el}} style={{color: fontColor}}>{inputs.description}</p>
+        <h2 
+          ref={(el) => {ref.current[2] = el}} 
+          style={{color: fontColor}}>
+            {inputs.subTitle}
+        </h2>
+        <h3 
+          ref={(el) => {ref.current[3] = el}} 
+          style={{color: fontColor}}>
+            {inputs.description}
+        </h3>
       </ThumnailWrap>
       <div>
-        <input name='title'  value={inputs.title} onChange={onChange}/>
-        <input name='subTitle' value={inputs.subTitle} onChange={onChange}/>
-        <input name='description' value={inputs.description} onChange={onChange}/>
+        <Input name='title'  value={inputs.title} onChange={onChange}/>
+        <Input name='subTitle' value={inputs.subTitle} onChange={onChange}/>
+        <Input name='description' value={inputs.description} onChange={onChange}/>
       </div>
-      <div>
-        <span>배경을 정해주세요</span>
-        <button><input type="color" value={color} onChange={(e) => setColor(e.target.value)}/>색상선택</button>
-        <button onClick={gradientBackground}>그라디언트</button>
-        <button onClick={colorBackground}>단색</button>
-        <button><input type="file" accept="image/jpg, image/png, image/jpeg" onChange={(e) => imageBackground(e)}/>이미지</button>
-      </div>
-      <div>
-        <span>썸네일 구성요소</span>
-          <button name='title' onClick={changeLayout}>제목 + 부제목 + 설명</button>
-          <button name='subTitle' onClick={changeLayout}>제목 + 부제목</button>
-          <button name='description' onClick={changeLayout}>제목</button>
-        </div>
-      <div>
-        <span>썸네일 구성요소</span>
-        <button><input type="color" value={fontColor} onChange={(e) => setFontColor(e.target.value)}/>색상선택</button>
-        <button onClick={shadowText}>그림자</button>
-      </div>
-      <button onClick={onDownloadBtn}>다운로드</button>
-    </>
+      <OptionWrapper>
+        <OptionTitle>배경 선택</OptionTitle>
+        <label htmlFor="chooseColor">색상</label>
+        <ColorPicker 
+          type="color" 
+          id="chooseColor" 
+          value={color} 
+          onChange={(e) => setColor(e.target.value)}/>
+        <Button onClick={gradientBackground}>그라디언트</Button>
+        <Button onClick={colorBackground}>단색</Button>
+        <input 
+            type="file" 
+            accept="image/jpg, image/png, image/jpeg" 
+            ref={(el) => {ref.current[4] = el}}
+            onChange={(e) => imageBackground(e)}
+            style={{display: "none"}}
+          />
+        <Button onClick={() => ref.current[4]?.click()}>이미지</Button>
+      </OptionWrapper>
+      <OptionWrapper>
+        <OptionTitle>썸네일 구성요소</OptionTitle>
+          <Button name='title' onClick={changeLayout}>제목 + 부제목 + 설명</Button>
+          <Button name='subTitle' onClick={changeLayout}>제목 + 부제목</Button>
+          <Button name='description' onClick={changeLayout}>제목</Button>
+        </OptionWrapper>
+      <OptionWrapper>
+        <OptionTitle>글자 꾸미기</OptionTitle>
+        <label htmlFor="fontColor">색상</label>
+        <ColorPicker 
+          type="color"
+          id="fontColor" 
+          value={fontColor} 
+          onChange={(e) => 
+            setFontColor(e.target.value)}/>
+        <Button onClick={shadowText}>그림자</Button>
+      </OptionWrapper>
+      <Button onClick={onDownloadBtn}>다운로드</Button>
+    </Container>
   )
 }
 
