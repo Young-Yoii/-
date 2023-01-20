@@ -1,5 +1,5 @@
 import GlobalStyle from './GlobalStyle';
-import Layout from './components/Layout';
+import Layout from './components/Layout2';
 
 function App() {
   return (
