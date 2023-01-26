@@ -1,19 +1,30 @@
 import React from "react";
-import { useRef, useState, useReducer } from "react";
-import styled from 'styled-components';
+import { useRef, useState, useReducer} from "react";
+import styled, {css} from 'styled-components';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
+// import { useBgDispatch, useBgState } from "../store/BackgroundSlice";
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from "../store/Store";
+import { oneColor, changeColor, gradient, getImage  } from "../store/BackgroundSlice";
 
 const Container = styled.div`
   margin: 0 auto;
 `
-const ThumnailWrap = styled.div<{color: string, color2:string}>`
+const ThumnailWrap = styled.div<{color: string, rgb:string, img:string, isImg:boolean}>`
   width: 768px;
   height: 402px;
   margin: 0 auto;
-  background: ${props=>props.color2 !=='' ? `linear-gradient(to bottom, ${props.color}, #${props.color2})`
-    : props.color
-}
+  background: ${
+    props=>props.rgb !=='' 
+    ? `linear-gradient(to bottom, ${props.color}, #${props.rgb})`
+    : props.color 
+  };
+
+  ${props=>props.isImg && css`
+  background: url('${props.img}')
+  `}
 `;
 const Input = styled.input`
   margin-top: 20px;
@@ -54,33 +65,6 @@ const OptionTitle = styled.span`
   font-weight: 600;
 `;
 
-type bgState = {
-    color: string,
-    rgb: string,
-    img: string,
-};
-type bgAction = {type: 'ONE_COLOR'; color: string, rgb: string} | {type: 'GRADIENT'; color: string; rgb: string} | {type: 'IMAGE'; image: string};
-
-function reducer(state: bgState, action: bgAction): bgState {
-    console.log(state)
-    switch(action.type) {
-        case 'ONE_COLOR': return {
-            ...state,
-            color: action.color,
-            rgb: '',
-        }
-        case 'GRADIENT': return {
-            ...state,
-            color: action.color,
-            rgb: action.rgb
-        }
-        case 'IMAGE' : return {
-            ...state,
-            img: action.image}
-        default: return state
-    }
-    
-}
 
 type State = {
   title: string,
@@ -94,15 +78,13 @@ const Layout = () => {
       subTitle: '부제목을 입력하세요',
       description: '설명',
   });
-  const [state, dispatch] = useReducer(reducer, {
-    color: 'gray',
-    rgb: '',
-    img:''
-  });
 
-  const [color, setColor] = useState('#dece56');
   const [fontColor, setFontColor] = useState('#000');
   const ref = useRef<any>([]);
+  // const state = useBgState();
+  const dispatch = useDispatch();
+  const state = useSelector((state:RootState)=>state.background)
+
 
   const ALLOW_FILE_EXTENSION = "jpg,jpge,png";
   const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
@@ -131,12 +113,11 @@ const Layout = () => {
 
   const gradientBackground = () => {
     const rgb = randomRGB();
-    dispatch({type:'GRADIENT', color: state.color, rgb: rgb});
-//     ref.current[0].style.background = `linear-gradient(to bottom, ${color}, #${rgb})`
+    dispatch(gradient(rgb));
   }
 
   const colorBackground = () => {
-    dispatch({type:'ONE_COLOR', color: state.color, rgb:''});
+    dispatch(oneColor(state.color));
   }
 
   const imageBackground = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -158,9 +139,7 @@ const Layout = () => {
     fileReader.readAsDataURL(file);
     fileReader.onloadend = (e) => {
       const result = e?.target?.result as string;
-        ref.current[0].style.background = `url('${result}')`
-        ref.current[0].style.backgroundSize = 'cover';
-        ref.current[0].style.backgroundRepeat = 'no-repeat';
+      dispatch(getImage(result));
     }
   }
 
@@ -210,7 +189,9 @@ const Layout = () => {
       <ThumnailWrap 
         ref={(el) => {ref.current[0] = el}} 
         color={state.color}
-        color2={state.rgb}
+        rgb={state.rgb}
+        img={state.img}
+        isImg={state.isImg}
         >
         <h1 
           ref={(el) => {ref.current[1] = el}} 
@@ -239,8 +220,8 @@ const Layout = () => {
         <ColorPicker 
           type="color" 
           id="chooseColor" 
-          // value={color} 
-          // onChange={(e) => state.color:e.target.value}}
+          value={state.color} 
+          onChange={(e) => dispatch(changeColor(e.target.value))}
           />
         <Button onClick={gradientBackground}>그라디언트</Button>
         <Button onClick={colorBackground}>단색</Button>
