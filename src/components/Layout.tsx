@@ -1,16 +1,32 @@
 import React from "react";
-import { useRef, useState } from "react";
-import styled from 'styled-components';
+import { useRef, useState, useReducer} from "react";
+import styled, {css} from 'styled-components';
 import domtoimage from 'dom-to-image';
-import { saveAs } from 'file-saver'
+import { saveAs } from 'file-saver';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { RootState } from "../store/Store";
+import ChangeBackground from "./ChangeBackground";
+import ChangeLayout from "./ChangeLayout";
+import ChangeTextStyle from "./ChangeTextStyle";
 
 const Container = styled.div`
   margin: 0 auto;
 `
-const ThumnailWrap = styled.div`
+const ThumnailWrap = styled.div<{color: string, rgb:string, img:string, isImg:boolean}>`
   width: 768px;
   height: 402px;
   margin: 0 auto;
+  background: ${
+    props=>props.rgb !=='' 
+    ? `linear-gradient(to bottom, ${props.color}, #${props.rgb})`
+    : props.color 
+  };
+
+  ${props=>props.isImg && css`
+  background: url('${props.img}')
+  `}
+
 `;
 const Input = styled.input`
   margin-top: 20px;
@@ -22,19 +38,6 @@ const Input = styled.input`
   height: 30px;
   margin-right: 20px;
 `;
-const ColorPicker = styled.input`
-  background-color: transparent;
-  padding:0;
-  appearance: none;
-  width:35px;
-  height:35px;
-  border:none;
-  
-  &::-webkit-color-swatch {
-    border-radius: 5px;
-    border:none;
-  }
-`;
 const Button = styled.button`
   background-color:#fff;
   border-radius: 20px;
@@ -43,13 +46,47 @@ const Button = styled.button`
   height: 30px;
   margin-right: 20px;
 `
-const OptionWrapper = styled.div`
-  border-bottom: 2px solid #000;
-  padding-bottom: 20px;
-`;
-const OptionTitle = styled.span`
-  font-weight: 600;
-`;
+const TextWrap = styled.div
+<{showAllText:boolean, hideDescription:boolean, showOnlyTitle:boolean, color:string, shadow:boolean}>`
+  
+  position: relative;
+  width: 768px;
+  height: 402px;
+  text-align: center;
+
+  > h1, h2, p {
+    position: relative;
+    color: ${props => props.color};
+    ${props => props.shadow && css`
+    text-shadow: 2px 2px 2px #828282;
+    `}
+  };
+
+  ${props => props.showAllText && css`
+    > h1 {top: 140px};
+    > h2 {top: 150px};
+    > p {top:220px};
+  `}
+  ${props => props.hideDescription && css`
+    > h1 {top: 150px};
+    > h2 {top: 160px};
+    > p {display:none};
+  `}
+  ${props => props.showOnlyTitle && css`
+    > h1 {top: 170px};
+    > h2 {display:none};
+    > p {display:none};
+  `}
+`
+const Title = styled.h1<{size:number}>`
+  font-size: ${props => props.size}px;
+`
+const SubTitle = styled.h2<{size:number}>`
+  font-size: ${props => props.size}px;
+`
+const Description = styled.p<{size:number}>`
+  font-size: ${props => props.size}px;
+`
 
 type State = {
   title: string,
@@ -63,26 +100,11 @@ const Layout = () => {
       subTitle: '부제목을 입력하세요',
       description: '설명',
   });
-  const [color, setColor] = useState('#dece56');
-  const [fontColor, setFontColor] = useState('#000');
+
   const ref = useRef<any>([]);
-
-  const ALLOW_FILE_EXTENSION = "jpg,jpge,png";
-  const FILE_SIZE_MAX_LIMIT = 5 * 1024 * 1024;
-
-  const randomRGB = ()  => {
-    let rgb = '';
-      rgb += (Math.floor(Math.random() * 90 + 1) + 150)
-        .toString(16)
-        .padStart(2, '0');
-      rgb += (Math.floor(Math.random() * 90 + 1) + 150)
-        .toString(16)
-        .padStart(2, '0');
-      rgb += (Math.floor(Math.random() * 90 + 1) + 150)
-        .toString(16)
-        .padStart(2, '0');
-      return rgb;
-    };
+  const backgroundState = useSelector((state:RootState)=>state.background);
+  const layoutState = useSelector((state:RootState)=>state.layout);
+  const textStyleState = useSelector((state:RootState)=>state.textStyle);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = e.target;
@@ -91,72 +113,6 @@ const Layout = () => {
       [name] : value,
     })
   }
-
-  const gradientBackground = () => {
-    const rgb = randomRGB();
-    ref.current[0].style.background = `linear-gradient(to bottom, ${color}, #${rgb})`
-  }
-
-  const colorBackground = () => {
-    ref.current[0].style.background = `${color}`
-  }
-
-  const imageBackground = (e:React.ChangeEvent<HTMLInputElement>) => {
-    const image = e.target;
-    const file = (image.files as FileList)?.[0];
-
-    if(!fileExtensionValid(file)){
-      image.value = '';
-      alert(`업로드 가능한 확장자가 아닙니다. [가능한 확장자 : ${ALLOW_FILE_EXTENSION}]`)
-      return;
-    }
-    if(file.size > FILE_SIZE_MAX_LIMIT){
-      image.value = '';
-      alert('업로드 가능한 최대 용량은 5MB입니다. ')
-      return;
-    }
-
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onloadend = (e) => {
-      const result = e?.target?.result as string;
-        ref.current[0].style.background = `url('${result}')`
-        ref.current[0].style.backgroundSize = 'cover';
-        ref.current[0].style.backgroundRepeat = 'no-repeat';
-    }
-  }
-
-  const fileExtensionValid = (file:File):boolean => {
-    const lastIndex = file.name.lastIndexOf('.');
-    if(lastIndex < 0) return false;
-    const extension = file.name.substring(lastIndex+1).toLowerCase();
-    if(!(ALLOW_FILE_EXTENSION.indexOf(extension) > -1) || extension === '') return false;
-    return true;
-  }
-
-  const changeLayout = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const name = e.currentTarget.name;
-        
-    if(name === 'title') {
-      [1,2,3].forEach(i => 
-        ref.current[i].style.opacity = 1)
-    }
-    if(name === 'subTitle') {
-      ref.current[3].style.opacity = 0;
-      ref.current[1].style.opacity = 1;
-      ref.current[2].style.opacity = 1;
-    }
-    if(name === 'description') {
-        ref.current[2].style.opacity = 0;
-        ref.current[3].style.opacity = 0;
-    } 
-  };
-
-   const shadowText = () => {
-    [1,2,3].forEach(i => {
-      ref.current[i].style.textShadow = '2px 2px 2px gray'
-    });
-  };
 
   const onDownloadBtn = () => {
     domtoimage
@@ -171,64 +127,37 @@ const Layout = () => {
       <h1>썸네일 메이커</h1>
       <ThumnailWrap 
         ref={(el) => {ref.current[0] = el}} 
-        style={{backgroundColor: color}}>
-        <h1 
-          ref={(el) => {ref.current[1] = el}} 
-          style={{color: fontColor}}>
-            {inputs.title}
-        </h1>
-        <h2 
-          ref={(el) => {ref.current[2] = el}} 
-          style={{color: fontColor}}>
-            {inputs.subTitle}
-        </h2>
-        <h3 
-          ref={(el) => {ref.current[3] = el}} 
-          style={{color: fontColor}}>
-            {inputs.description}
-        </h3>
+        color={backgroundState.color}
+        rgb={backgroundState.rgb}
+        img={backgroundState.img}
+        isImg={backgroundState.isImg}
+        >
+        <TextWrap
+          showAllText={layoutState.showAllText}
+          hideDescription={layoutState.hideDescription}
+          showOnlyTitle={layoutState.showOnlyTitle}
+          color={textStyleState.color}
+          shadow={textStyleState.shadow}
+        >
+          <Title
+            size={textStyleState.titleSize}
+          >{inputs.title}</Title>
+          <SubTitle
+            size={textStyleState.subTitleSize}
+          >{inputs.subTitle}</SubTitle>
+          <Description
+            size={textStyleState.descriptionSize}
+          >{inputs.description}</Description>
+        </TextWrap>
       </ThumnailWrap>
       <div>
         <Input name='title'  value={inputs.title} onChange={onChange}/>
         <Input name='subTitle' value={inputs.subTitle} onChange={onChange}/>
         <Input name='description' value={inputs.description} onChange={onChange}/>
       </div>
-      <OptionWrapper>
-        <OptionTitle>배경 선택</OptionTitle>
-        <label htmlFor="chooseColor">색상</label>
-        <ColorPicker 
-          type="color" 
-          id="chooseColor" 
-          value={color} 
-          onChange={(e) => setColor(e.target.value)}/>
-        <Button onClick={gradientBackground}>그라디언트</Button>
-        <Button onClick={colorBackground}>단색</Button>
-        <input 
-            type="file" 
-            accept="image/jpg, image/png, image/jpeg" 
-            ref={(el) => {ref.current[4] = el}}
-            onChange={(e) => imageBackground(e)}
-            style={{display: "none"}}
-          />
-        <Button onClick={() => ref.current[4]?.click()}>이미지</Button>
-      </OptionWrapper>
-      <OptionWrapper>
-        <OptionTitle>썸네일 구성요소</OptionTitle>
-          <Button name='title' onClick={changeLayout}>제목 + 부제목 + 설명</Button>
-          <Button name='subTitle' onClick={changeLayout}>제목 + 부제목</Button>
-          <Button name='description' onClick={changeLayout}>제목</Button>
-        </OptionWrapper>
-      <OptionWrapper>
-        <OptionTitle>글자 꾸미기</OptionTitle>
-        <label htmlFor="fontColor">색상</label>
-        <ColorPicker 
-          type="color"
-          id="fontColor" 
-          value={fontColor} 
-          onChange={(e) => 
-            setFontColor(e.target.value)}/>
-        <Button onClick={shadowText}>그림자</Button>
-      </OptionWrapper>
+      <ChangeBackground />
+      <ChangeLayout/>
+      <ChangeTextStyle/>
       <Button onClick={onDownloadBtn}>다운로드</Button>
     </Container>
   )

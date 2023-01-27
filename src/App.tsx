@@ -1,5 +1,5 @@
 import GlobalStyle from './GlobalStyle';
-import Layout from './components/Layout2';
+import Layout from './components/Layout';
 // import { BgProvider } from './store/BackgroundSlice';
 import  store  from './store/Store';
 import { Provider } from "react-redux";
