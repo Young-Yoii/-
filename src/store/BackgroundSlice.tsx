@@ -36,9 +36,12 @@ export const backgroundSlice = createSlice({
     getImage(state, action: PayloadAction<string>) {
       state.img = action.payload;
       state.isImg = true;
-    }
+    },
+    resetBg(state){
+      Object.assign(state, initialState);
+    },
   }
 });
 
-export const {oneColor, gradient, changeColor, getImage} = backgroundSlice.actions;
+export const {oneColor, gradient, changeColor, getImage, resetBg} = backgroundSlice.actions;
 export default backgroundSlice.reducer;

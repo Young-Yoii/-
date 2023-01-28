@@ -32,8 +32,11 @@ export const LayoutSlice = createSlice({
       state.showAllText = false;
       state.hideDescription = false;
     },
+    resetLayout(state){
+      Object.assign(state, initialState);
+    }
   }
 });
 
-export const {showAllText, hideDescription, showOnlyTitle} = LayoutSlice.actions;
+export const {showAllText, hideDescription, showOnlyTitle,resetLayout} = LayoutSlice.actions;
 export default LayoutSlice.reducer;

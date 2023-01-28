@@ -36,8 +36,11 @@ export const textStyleSlice = createSlice({
     setSubTitleSize(state, action: PayloadAction<number>) {
       state.subTitleSize = action.payload;
     },
-    setDescribtionSize(state, action: PayloadAction<number>) {
+    setDescriptionSize(state, action: PayloadAction<number>) {
       state.descriptionSize = action.payload;
+    },
+    resetTextStyle(state){
+      Object.assign(state, initialState);
     }
   }
 });
@@ -48,6 +51,7 @@ export const {
   setShadow, 
   setTitleSize, 
   setSubTitleSize, 
-  setDescribtionSize 
+  setDescriptionSize,
+  resetTextStyle
 } = textStyleSlice.actions;
 export default textStyleSlice.reducer;

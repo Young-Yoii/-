@@ -1,8 +1,8 @@
 import GlobalStyle from './GlobalStyle';
 import Layout from './components/Layout';
-// import { BgProvider } from './store/BackgroundSlice';
 import  store  from './store/Store';
 import { Provider } from "react-redux";
+import './App.css';
 
 function App() {
   return (
