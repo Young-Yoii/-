@@ -1,17 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from "@reduxjs/toolkit";
 
 type LayoutState = {
-  showAllText: boolean,
-  hideDescription: boolean,
-  showOnlyTitle: boolean,
+  showAllText: boolean;
+  hideDescription: boolean;
+  showOnlyTitle: boolean;
 };
 
 const initialState: LayoutState = {
   showAllText: true,
   hideDescription: false,
   showOnlyTitle: false,
-}
+};
 
 export const LayoutSlice = createSlice({
   name: 'layout',
@@ -22,7 +21,7 @@ export const LayoutSlice = createSlice({
       state.hideDescription = false;
       state.showOnlyTitle = false;
     },
-    hideDescription(state){
+    hideDescription(state) {
       state.hideDescription = true;
       state.showAllText = false;
       state.showOnlyTitle = false;
@@ -32,11 +31,11 @@ export const LayoutSlice = createSlice({
       state.showAllText = false;
       state.hideDescription = false;
     },
-    resetLayout(state){
+    resetLayout(state) {
       Object.assign(state, initialState);
-    }
-  }
+    },
+  },
 });
 
-export const {showAllText, hideDescription, showOnlyTitle,resetLayout} = LayoutSlice.actions;
+export const { showAllText, hideDescription, showOnlyTitle, resetLayout } = LayoutSlice.actions;
 export default LayoutSlice.reducer;

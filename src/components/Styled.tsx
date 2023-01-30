@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from 'styled-components';
 
 export const OptionWrapper = styled.div`
   display: flex;
@@ -17,7 +17,7 @@ export const OptionTitle = styled.span`
   margin-bottom: 8px;
 `;
 export const Button = styled.button`
-  background-color:#fff;
+  background-color: #fff;
   border-radius: 8px;
   border: none;
   width: 200px;
@@ -28,26 +28,25 @@ export const Button = styled.button`
   &.clicked {
     background: #ed6c30;
     color: #ffffff;
-  };
-
-`
+  }
+`;
 export const ColorPicker = styled.input`
   background-color: transparent;
-  padding:0;
+  padding: 0;
   appearance: none;
-  width:35px;
-  height:35px;
-  border:none;
+  width: 35px;
+  height: 35px;
+  border: none;
 
   &::-webkit-color-swatch {
     border-radius: 5px;
-    border:none;
+    border: none;
   }
 `;
 export const ColorWrapper = styled.div`
   display: flex;
   align-items: center;
-`
+`;
 export const Input = styled.input`
   margin-top: 20px;
   border-radius: 8px;
@@ -59,7 +58,7 @@ export const Input = styled.input`
   margin-right: 20px;
 `;
 export const TextSizeInput = styled.input`
-  background-color:#fff;
+  background-color: #fff;
   border-radius: 8px;
   border: none;
   width: 200px;
@@ -68,4 +67,4 @@ export const TextSizeInput = styled.input`
   box-shadow: 1px 2px 4px #484646;
   text-align: center;
   border: 1px solid gray;
-`
+`;

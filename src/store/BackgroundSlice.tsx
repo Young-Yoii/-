@@ -1,19 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from "@reduxjs/toolkit";
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 type backgroundState = {
-  color: string,
-  rgb: string,
-  img: string,
-  isImg : boolean,
+  color: string;
+  rgb: string;
+  img: string;
+  isImg: boolean;
 };
 
 const initialState: backgroundState = {
   color: '#f1a24f',
   rgb: '',
-  img:'',
+  img: '',
   isImg: false,
-}
+};
 
 export const backgroundSlice = createSlice({
   name: 'background',
@@ -22,7 +22,7 @@ export const backgroundSlice = createSlice({
     changeColor(state, action: PayloadAction<string>) {
       state.color = action.payload;
     },
-    oneColor(state, action: PayloadAction<string>){
+    oneColor(state, action: PayloadAction<string>) {
       state.color = action.payload;
       state.rgb = initialState.rgb;
       state.img = '';
@@ -37,11 +37,11 @@ export const backgroundSlice = createSlice({
       state.img = action.payload;
       state.isImg = true;
     },
-    resetBg(state){
+    resetBg(state) {
       Object.assign(state, initialState);
     },
-  }
+  },
 });
 
-export const {oneColor, gradient, changeColor, getImage, resetBg} = backgroundSlice.actions;
+export const { oneColor, gradient, changeColor, getImage, resetBg } = backgroundSlice.actions;
 export default backgroundSlice.reducer;

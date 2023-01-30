@@ -1,12 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from "@reduxjs/toolkit";
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 type textStyleState = {
-  color: string,
-  shadow: boolean,
-  titleSize: number,
-  subTitleSize: number,
-  descriptionSize:number,
+  color: string;
+  shadow: boolean;
+  titleSize: number;
+  subTitleSize: number;
+  descriptionSize: number;
 };
 
 const initialState: textStyleState = {
@@ -15,7 +15,7 @@ const initialState: textStyleState = {
   titleSize: 45,
   subTitleSize: 25,
   descriptionSize: 20,
-}
+};
 
 export const textStyleSlice = createSlice({
   name: 'textStyle',
@@ -24,7 +24,7 @@ export const textStyleSlice = createSlice({
     changeColor(state, action: PayloadAction<string>) {
       state.color = action.payload;
     },
-    setFontColor(state,action: PayloadAction<string>){
+    setFontColor(state, action: PayloadAction<string>) {
       state.color = action.payload;
     },
     setShadow(state) {
@@ -39,19 +39,11 @@ export const textStyleSlice = createSlice({
     setDescriptionSize(state, action: PayloadAction<number>) {
       state.descriptionSize = action.payload;
     },
-    resetTextStyle(state){
+    resetTextStyle(state) {
       Object.assign(state, initialState);
-    }
-  }
+    },
+  },
 });
 
-export const { 
-  changeColor, 
-  setFontColor, 
-  setShadow, 
-  setTitleSize, 
-  setSubTitleSize, 
-  setDescriptionSize,
-  resetTextStyle
-} = textStyleSlice.actions;
+export const { changeColor, setFontColor, setShadow, setTitleSize, setSubTitleSize, setDescriptionSize, resetTextStyle } = textStyleSlice.actions;
 export default textStyleSlice.reducer;
