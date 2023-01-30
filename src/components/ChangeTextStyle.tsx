@@ -5,7 +5,7 @@ import { RootState } from '../store/Store';
 import { changeColor, setShadow, setFontColor, setTitleSize, setSubTitleSize, setDescriptionSize } from '../store/TextStyleSlice';
 
 const ChangeTextStyle = () => {
-  const [selectBtn, setSelectBtn] = useState<boolean>(true);
+  const [selectBtn, setSelectBtn] = useState<boolean>(false);
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.textStyle);
 
