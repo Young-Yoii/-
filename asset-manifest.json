@@ -1,0 +1,12 @@
+{
+  "files": {
+    "main.css": "/thumbnail-maker/static/css/main.73bf21d0.css",
+    "main.js": "/thumbnail-maker/static/js/main.5468eaef.js",
+    "index.html": "/thumbnail-maker/index.html",
+    "main.5468eaef.js.map": "/thumbnail-maker/static/js/main.5468eaef.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.73bf21d0.css",
+    "static/js/main.5468eaef.js"
+  ]
+}
