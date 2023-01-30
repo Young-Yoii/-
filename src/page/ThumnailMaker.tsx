@@ -1,10 +1,10 @@
 import styled, {css} from 'styled-components';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store/Store';
-import Thumnail from "./Thumnail";
-import ChangeBackground from "./ChangeBackground";
-import ChangeLayout from "./ChangeLayout";
-import ChangeTextStyle from "./ChangeTextStyle";
+import Thumnail from "../components/Thumnail";
+import ChangeBackground from "../components/ChangeBackground";
+import ChangeLayout from "../components/ChangeLayout";
+import ChangeTextStyle from "../components/ChangeTextStyle";
 
 const Background = styled.div<{bgcolor: string, rgb:string, img:string, isImg:boolean}>`
   width: 100%;
@@ -50,7 +50,7 @@ const OptionContainer = styled.div`
   margin-left: 50px;
 `
 
-const Layout = () => {
+const ThumnailMaker = () => {
   const backgroundState = useSelector((state:RootState)=>state.background);
   return (
     <>
@@ -72,4 +72,4 @@ const Layout = () => {
   )
 }
 
-export default Layout;
+export default ThumnailMaker;
