@@ -12,7 +12,6 @@ import { resetTextStyle } from '../store/TextStyleSlice';
 const ThumnailWrap = styled.div<{ bgcolor: string; rgb: string; img: string; isImg: boolean }>`
   width: 768px;
   height: 402px;
-  margin: 40px 0px 0px 0px;
   background: ${(props) => (props.rgb !== '' ? `linear-gradient(to bottom, ${props.bgcolor}, #${props.rgb})` : props.bgcolor)};
 
   ${(props) =>
@@ -114,6 +113,7 @@ const CompleteBtn = styled.button<{ reset: boolean }>`
 const TitleWrap = styled.div`
   display: flex;
   align-items: flex-end;
+  margin-bottom: 40px;
 
   > p {
     color: #7a7878;
