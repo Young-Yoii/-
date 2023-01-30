@@ -9,7 +9,7 @@ import { resetBg } from '../store/BackgroundSlice';
 import { resetLayout } from '../store/LayoutSlice';
 import { resetTextStyle } from '../store/TextStyleSlice';
 
-const ThumnailWrap = styled.div<{ bgcolor: string; rgb: string; img: string; isImg: boolean }>`
+const ThumbnailWrap = styled.div<{ bgcolor: string; rgb: string; img: string; isImg: boolean }>`
   width: 768px;
   height: 402px;
   background: ${(props) => (props.rgb !== '' ? `linear-gradient(to bottom, ${props.bgcolor}, #${props.rgb})` : props.bgcolor)};
@@ -132,7 +132,7 @@ type State = {
   description: string;
 };
 
-const Thumnail = () => {
+const Thumbnail = () => {
   const [inputs, setInputs] = useState<State>({
     title: '제목을 입력하세요',
     subTitle: '부제목을 입력하세요',
@@ -165,7 +165,7 @@ const Thumnail = () => {
         <h1>블로그 썸네일 메이커</h1>
         <p>by gayoung</p>
       </TitleWrap>
-      <ThumnailWrap bgcolor={backgroundState.color} rgb={backgroundState.rgb} img={backgroundState.img} isImg={backgroundState.isImg} ref={ref}>
+      <ThumbnailWrap bgcolor={backgroundState.color} rgb={backgroundState.rgb} img={backgroundState.img} isImg={backgroundState.isImg} ref={ref}>
         <TextWrap
           showAllText={layoutState.showAllText}
           hideDescription={layoutState.hideDescription}
@@ -179,7 +179,7 @@ const Thumnail = () => {
           </SubTitle>
           <Description size={textStyleState.descriptionSize}>{inputs.description}</Description>
         </TextWrap>
-      </ThumnailWrap>
+      </ThumbnailWrap>
       <InputWrap>
         <Input name="title" value={inputs.title} onChange={onChange} />
         <Input name="subTitle" value={inputs.subTitle} onChange={onChange} />
@@ -209,4 +209,4 @@ const Thumnail = () => {
   );
 };
 
-export default Thumnail;
+export default Thumbnail;

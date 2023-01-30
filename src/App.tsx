@@ -1,5 +1,5 @@
 import GlobalStyle from './GlobalStyle';
-import ThumnailMaker from './page/ThumnailMaker';
+import ThumbnailMaker from './page/ThumbnailMaker';
 import store from './store/Store';
 import { Provider } from 'react-redux';
 import './App.css';
@@ -9,7 +9,7 @@ function App() {
     <>
       <GlobalStyle />
       <Provider store={store}>
-        <ThumnailMaker />
+        <ThumbnailMaker />
       </Provider>
     </>
   );
