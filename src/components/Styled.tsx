@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const OptionWrapper = styled.div`
   display: flex;
@@ -24,6 +24,12 @@ export const Button = styled.button`
   height: 32px;
   margin: 8px 0px;
   box-shadow: 1px 2px 4px #484646;
+
+  &.clicked {
+    background: #ed6c30;
+    color: #ffffff;
+  };
+
 `
 export const ColorPicker = styled.input`
   background-color: transparent;

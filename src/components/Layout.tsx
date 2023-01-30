@@ -6,26 +6,26 @@ import ChangeBackground from "./ChangeBackground";
 import ChangeLayout from "./ChangeLayout";
 import ChangeTextStyle from "./ChangeTextStyle";
 
-const Background = styled.div<{color: string, rgb:string, img:string, isImg:boolean}>`
+const Background = styled.div<{bgcolor: string, rgb:string, img:string, isImg:boolean}>`
   width: 100%;
-  height: 950px;
+  height: 100%;
   position: absolute;
   left: 0;
   top: 0;
   background: ${
     props=>props.rgb !=='' 
-    ? `linear-gradient(to bottom, ${props.color}, #${props.rgb})`
-    : props.color 
+    ? `linear-gradient(to bottom, ${props.bgcolor}, #${props.rgb})`
+    : props.bgcolor 
   };
 
   ${props=>props.isImg && css`
-  background: url('${props.img}') no-repeat center;
-  background-size: cover;
+    background: url('${props.img}') no-repeat center;
+    background-size: cover;
   `}
   &::after {
     backdrop-filter: blur(10px);
     content: "";
-    height: 800px;
+    height: 100%;
     position: absolute;
     width: 100%;
   }
@@ -37,12 +37,14 @@ const Container = styled.div`
   filter: none;
   background: #fff;
   position: relative;
-  width: 1300px;
+  min-width: 1300px;
+  max-width: 75%;
   height: 750px;
-  margin: 5% auto;
+  margin: 0% auto;
   padding: 30px 0px;
   box-shadow: 0 0 20px #aaa;
   box-sizing:border-box;
+  margin-top: 5%;
 `
 const OptionContainer = styled.div`
   margin-left: 50px;
@@ -53,7 +55,7 @@ const Layout = () => {
   return (
     <>
     <Background 
-      color={backgroundState.color}
+      bgcolor={backgroundState.color}
       rgb={backgroundState.rgb}
       img={backgroundState.img}
       isImg={backgroundState.isImg}

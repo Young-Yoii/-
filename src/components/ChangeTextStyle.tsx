@@ -1,5 +1,6 @@
 import { OptionWrapper, OptionTitle, Button, ColorPicker, ColorWrapper, TextSizeInput } from "./Styled"
 import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react"
 import { RootState } from "../store/Store";
 import { 
   changeColor, 
@@ -11,6 +12,7 @@ import {
 } from "../store/TextStyleSlice";
 
 const ChangeTextStyle = () => {
+  const [selectBtn, setSelectBtn] = useState<boolean>(true);
   const dispatch = useDispatch();
   const state = useSelector((state: RootState) => state.textStyle);
 
@@ -28,13 +30,31 @@ const ChangeTextStyle = () => {
           dispatch(setFontColor(e.target.value))
           }}/>
       </ColorWrapper>
-      <Button onClick={()=> 
-        {dispatch(setShadow())
-      }}>그림자
+      <Button 
+        className={selectBtn ? 'clicked' : ''}
+        onClick={()=> {
+         dispatch(setShadow())
+         setSelectBtn((prev:boolean) => !prev)
+        }}>그림자
       </Button>
-      <TextSizeInput type="text" placeholder="제목 글자 크기" onChange={(e) => dispatch(setTitleSize(Number(e.target.value)))}/>
-      <TextSizeInput type="text" placeholder="부제목 글자 크기" onChange={(e) => dispatch(setSubTitleSize(Number(e.target.value)))}/>
-      <TextSizeInput type="text" placeholder="설명 글자 크기" onChange={(e) => dispatch(setDescriptionSize (Number(e.target.value)))}/>
+      <TextSizeInput 
+        type="text" 
+        placeholder="제목 글자 크기" 
+        onChange={(e) => 
+        dispatch(setTitleSize(Number(e.target.value)))}
+      />
+      <TextSizeInput 
+        type="text" 
+        placeholder="부제목 글자 크기" 
+        onChange={(e) => 
+        dispatch(setSubTitleSize(Number(e.target.value)))}
+      />
+      <TextSizeInput 
+        type="text" 
+        placeholder="설명 글자 크기" 
+        onChange={(e) => 
+        dispatch(setDescriptionSize(Number(e.target.value)))}
+      />
     </OptionWrapper>
     )
 }

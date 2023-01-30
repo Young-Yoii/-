@@ -10,7 +10,7 @@ type textStyleState = {
 };
 
 const initialState: textStyleState = {
-  color: '#000000',
+  color: '#ffffff',
   shadow: false,
   titleSize: 45,
   subTitleSize: 25,

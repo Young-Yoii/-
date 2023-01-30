@@ -9,24 +9,24 @@ import { resetBg } from "../store/BackgroundSlice";
 import { resetLayout } from '../store/LayoutSlice';
 import { resetTextStyle } from '../store/TextStyleSlice';
 
-const ThumnailWrap = styled.div<{color: string, rgb:string, img:string, isImg:boolean}>`
+const ThumnailWrap = styled.div<{bgcolor: string, rgb:string, img:string, isImg:boolean}>`
   width: 768px;
   height: 402px;
   margin: 40px 0px 0px 0px;
   background: ${
     props=>props.rgb !=='' 
-    ? `linear-gradient(to bottom, ${props.color}, #${props.rgb})`
-    : props.color 
+    ? `linear-gradient(to bottom, ${props.bgcolor}, #${props.rgb})`
+    : props.bgcolor
   };
 
   ${props=>props.isImg && css`
-  background: url('${props.img}') no-repeat center;
-  background-size: cover;
+    background: url('${props.img}') no-repeat center;
+    background-size: cover;
   `}
 
 `;
 const TextWrap = styled.div
-<{showAllText:boolean, hideDescription:boolean, showOnlyTitle:boolean, color:string, shadow:boolean}>`
+<{showAllText:boolean, hideDescription:boolean, showOnlyTitle:boolean, textColor:string, shadow:boolean}>`
   
   position: relative;
   width: 768px;
@@ -35,7 +35,7 @@ const TextWrap = styled.div
 
   > h1, h2, p {
     position: relative;
-    color: ${props => props.color};
+    color: ${props => props.textColor};
     ${props => props.shadow && css`
     text-shadow: 2px 2px 2px #828282;
     `}
@@ -60,8 +60,10 @@ const TextWrap = styled.div
 const Title = styled.h1<{size:number}>`
   font-size: ${props => props.size}px;
 `
-const SubTitle = styled.h2<{size:number}>`
+const SubTitle = styled.h2<{size:number, textColor:string}>`
   font-size: ${props => props.size}px;
+  border-top: 1px solid ${props => props.textColor};
+  display: inline-block;
 `
 const Description = styled.p<{size:number}>`
   font-size: ${props => props.size}px;
@@ -83,6 +85,15 @@ const CompleteBtn = styled.button<{reset:boolean}>`
   ${props=>props.reset && css`
     background-color: #9f9f9f;
   `}
+`
+const TitleWrap = styled.div`
+  display: flex;
+  align-items: center;
+`
+const Image = styled.img`
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
 `
 
 type State = {
@@ -122,9 +133,12 @@ const Thumnail = () => {
 
   return (
     <div>
-    <h1>썸네일 메이커</h1>
+      <TitleWrap>
+        <Image src="/image.png" alt=""/>
+        <h1>블로그 썸네일 메이커</h1>
+      </TitleWrap>
       <ThumnailWrap
-        color={backgroundState.color}
+        bgcolor={backgroundState.color}
         rgb={backgroundState.rgb}
         img={backgroundState.img}
         isImg={backgroundState.isImg}
@@ -134,11 +148,11 @@ const Thumnail = () => {
         showAllText={layoutState.showAllText}
         hideDescription={layoutState.hideDescription}
         showOnlyTitle={layoutState.showOnlyTitle}
-        color={textStyleState.color}
+        textColor={textStyleState.color}
         shadow={textStyleState.shadow}
       >
         <Title size={textStyleState.titleSize}>{inputs.title}</Title>
-        <SubTitle size={textStyleState.subTitleSize}>{inputs.subTitle}</SubTitle>
+        <SubTitle size={textStyleState.subTitleSize} textColor={textStyleState.color}>{inputs.subTitle}</SubTitle>
         <Description size={textStyleState.descriptionSize}>{inputs.description}</Description>
       </TextWrap>
       </ThumnailWrap>
