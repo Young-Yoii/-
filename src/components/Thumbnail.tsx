@@ -119,11 +119,11 @@ const TitleWrap = styled.div`
     color: #7a7878;
     margin-left: 4px;
   }
-`;
-const Image = styled.img`
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
+  > img {
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+  }
 `;
 
 type State = {
@@ -161,7 +161,7 @@ const Thumbnail = () => {
   return (
     <div>
       <TitleWrap>
-        <Image src="/image.png" alt="" />
+        <img src={process.env.PUBLIC_URL + '/image.png'} alt="" />
         <h1>블로그 썸네일 메이커</h1>
         <p>by gayoung</p>
       </TitleWrap>
