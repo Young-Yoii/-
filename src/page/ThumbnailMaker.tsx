@@ -9,11 +9,11 @@ import ChangeTextStyle from '../components/ChangeTextStyle';
 const Background = styled.div<{ bgcolor: string; rgb: string; img: string; isImg: boolean }>`
   width: 100%;
   height: 100%;
+  min-height: 900px;
   position: absolute;
   left: 0;
   top: 0;
   background: ${(props) => (props.rgb !== '' ? `linear-gradient(to bottom, ${props.bgcolor}, #${props.rgb})` : props.bgcolor)};
-
   ${(props) =>
     props.isImg &&
     css`
@@ -36,13 +36,12 @@ const Container = styled.div`
   background: #fff;
   position: relative;
   min-width: 1300px;
-  max-width: 75%;
-  height: 750px;
-  margin: 0% auto;
-  padding: 30px 0px;
+  width: 1300px;
+  height: 800px;
+  // padding: 30px 0px;
   box-shadow: 0 0 20px #aaa;
   box-sizing: border-box;
-  margin-top: 5%;
+  margin: 3% auto 0;
 `;
 const OptionContainer = styled.div`
   margin-left: 50px;
