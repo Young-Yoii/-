@@ -4,6 +4,8 @@ import { RootState } from '../store/Store';
 import domtoimage from 'dom-to-image';
 import { saveAs } from 'file-saver';
 import styled, { css } from 'styled-components';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { Input } from './Styled';
 import { resetBg } from '../store/BackgroundSlice';
 import { resetLayout } from '../store/LayoutSlice';
@@ -12,6 +14,7 @@ import { resetTextStyle } from '../store/TextStyleSlice';
 const ThumbnailWrap = styled.div<{ bgcolor: string; rgb: string; img: string; isImg: boolean }>`
   width: 768px;
   height: 402px;
+  overflow: hidden;
   background: ${(props) => (props.rgb !== '' ? `linear-gradient(to bottom, ${props.bgcolor}, #${props.rgb})` : props.bgcolor)};
 
   ${(props) =>
@@ -99,7 +102,7 @@ const CompleteBtn = styled.button<{ reset: boolean }>`
   border: none;
   width: 200px;
   height: 40px;
-  margin: 60px 40px 20px 40px;
+  margin: 60px 20px 0px 0px;
   box-shadow: 1px 2px 4px #484646;
   font-size: 15px;
   font-weight: 600;
@@ -157,6 +160,16 @@ const Thumbnail = () => {
       saveAs(blob, 'thumnail.png');
     });
   };
+  const onCopyBtn = async () => {
+    try {
+      const dataUri = await domtoimage.toPng(ref.current);
+      const blob = await fetch(dataUri).then((res) => res.blob());
+      await navigator.clipboard.write([new window.ClipboardItem({ 'image/png': blob })]);
+      toast('클립보드 복사완료!');
+    } catch (err) {
+      toast.error('클립보드 복사실패TT');
+    }
+  };
 
   return (
     <div>
@@ -200,10 +213,14 @@ const Thumbnail = () => {
           >
             초기화
           </CompleteBtn>
+          <CompleteBtn reset={false} onClick={onCopyBtn}>
+            클립보드 복사
+          </CompleteBtn>
           <CompleteBtn reset={false} onClick={onDownloadBtn}>
             다운로드
           </CompleteBtn>
         </div>
+        <ToastContainer position="top-center" autoClose={1000} hideProgressBar={true} theme="colored" />
       </InputWrap>
     </div>
   );

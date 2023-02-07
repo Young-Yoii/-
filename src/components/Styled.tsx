@@ -26,7 +26,7 @@ export const Button = styled.button`
   box-shadow: 1px 2px 4px #484646;
 
   &.clicked {
-    background: #ed6c30;
+    background: #807e7e;
     color: #ffffff;
   }
 `;
