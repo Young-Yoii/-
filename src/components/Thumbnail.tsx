@@ -194,9 +194,9 @@ const Thumbnail = () => {
         </TextWrap>
       </ThumbnailWrap>
       <InputWrap>
-        <Input name="title" value={inputs.title} onChange={onChange} />
-        <Input name="subTitle" value={inputs.subTitle} onChange={onChange} />
-        <Input name="description" value={inputs.description} onChange={onChange} />
+        <Input name="title" placeholder={inputs.title} onChange={onChange} />
+        <Input name="subTitle" placeholder={inputs.subTitle} onChange={onChange} />
+        <Input name="description" placeholder={inputs.description} onChange={onChange} />
         <div>
           <CompleteBtn
             reset
